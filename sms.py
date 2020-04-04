@@ -38,7 +38,7 @@ def get_contact_name(conn, contact_conn, contact_id):
 		c.execute("SELECT record_id FROM ABMultiValue WHERE value=? or value=? or value=? or value=?", phone_options)
 		for i in c:
 			c2 = contact_conn.cursor()
-			c2.execute("SELECT first, last FROM ABPerson WHERE ROWID=?", i)
+			c2.execute("SELECT first, last FROM ABPerson=?", i)
 			handle_id = " ".join((s for s in next(c2) if s))
 	contact_cache[contact_id] = handle_id
 	return handle_id
@@ -58,7 +58,7 @@ def copy_media_file(backup_extractor, path_in_backup):
 def handle_media(conn, backup_extractor, message_id, mtext):
 	c = conn.cursor()
 	c.execute("SELECT filename, mime_type FROM attachment WHERE ROWID in "\
-		      "(SELECT attachment_id FROM message_attachment_join WHERE message_id=?);", (message_id,))
+		      "(SELECT attachment_id FROM message_attachment_join message_id=?);", (message_id,))
 	for row in c:
 		new_media_path = copy_media_file(backup_extractor, row[0])
 		tag_format = '<a href="media/{1}"><{0} src="media/{1}" style="width:200px;"{2}></a>'
